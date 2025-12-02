@@ -58,8 +58,8 @@ module.exports = {
     // Get short commit SHA
     const shortCommit = commitRef ? commitRef.substring(0, 7) : "unknown";
 
-    // Get site name from deploy URL
-    const siteName = deployUrl ? deployUrl.match(/https?:\/\/[^.]+\.([^.]+\.[^.]+)/)?.[1] || 'site' : 'site';
+    // Get site name from Netlify environment variable
+    const siteName = process.env.SITE_NAME || 'site';
 
     // Get deploy log URL
     const deployId = process.env.DEPLOY_ID || '';
@@ -81,6 +81,11 @@ module.exports = {
       // Continue without QR code if generation fails
     }
 
+    // Build QR code cell content
+    const qrCodeCell = qrCodeDataUrl
+      ? '<details><summary> Toggle QR Code... </summary><br /><br />![QR Code](' + qrCodeDataUrl + ')<br /><br />_Use your smartphone camera to open QR code link._</details>'
+      : '<details><summary> Toggle QR Code... </summary><br /><br />QR code not available<br /><br /></details>';
+
     // Create comment body with unique identifier
     const commentIdentifier = "<!-- netlify-pr-deploy-info -->";
     const commentBody = `${commentIdentifier}
@@ -92,7 +97,7 @@ module.exports = {
 |<span aria-hidden="true">🔨</span> Latest commit | ${commitRef || 'N/A'} |
 |<span aria-hidden="true">🔍</span> Latest deploy log | ${deployLogUrl || 'N/A'} |
 |<span aria-hidden="true">😎</span> Deploy Preview | [${deployUrl}](${deployUrl}) |
-|<span aria-hidden="true">📱</span> Preview on mobile | <details><summary> Toggle QR Code... </summary><br /><br />${qrCodeDataUrl ? `![QR Code](${qrCodeDataUrl})` : 'QR code not available'}<br /><br />_Use your smartphone camera to open QR code link._</details> |
+|<span aria-hidden="true">📱</span> Preview on mobile | ${qrCodeCell} |
 |<span aria-hidden="true">🌳</span> Backend environment | \`${backendEnv}\` |
 ---
 <!-- [${siteName} Preview](${deployUrl}) -->`;
