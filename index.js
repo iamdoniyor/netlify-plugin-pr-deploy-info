@@ -1,4 +1,5 @@
 const { Octokit } = require("@octokit/rest");
+const QRCode = require("qrcode");
 
 module.exports = {
   onSuccess: async ({ inputs }) => {
@@ -67,6 +68,19 @@ module.exports = {
       ? `https://app.netlify.com/sites/${siteId}/deploys/${deployId}`
       : '';
 
+    // Generate QR code for deploy URL
+    let qrCodeDataUrl = '';
+    try {
+      qrCodeDataUrl = await QRCode.toDataURL(deployUrl, {
+        width: 200,
+        margin: 1,
+        errorCorrectionLevel: 'M'
+      });
+    } catch (error) {
+      console.error('ERROR: Failed to generate QR code:', error.message);
+      // Continue without QR code if generation fails
+    }
+
     // Create comment body with unique identifier
     const commentIdentifier = "<!-- netlify-pr-deploy-info -->";
     const commentBody = `${commentIdentifier}
@@ -78,6 +92,7 @@ module.exports = {
 |<span aria-hidden="true">🔨</span> Latest commit | ${commitRef || 'N/A'} |
 |<span aria-hidden="true">🔍</span> Latest deploy log | ${deployLogUrl || 'N/A'} |
 |<span aria-hidden="true">😎</span> Deploy Preview | [${deployUrl}](${deployUrl}) |
+|<span aria-hidden="true">📱</span> Preview on mobile | <details><summary> Toggle QR Code... </summary><br /><br />${qrCodeDataUrl ? `![QR Code](${qrCodeDataUrl})` : 'QR code not available'}<br /><br />_Use your smartphone camera to open QR code link._</details> |
 |<span aria-hidden="true">🌳</span> Backend environment | \`${backendEnv}\` |
 ---
 <!-- [${siteName} Preview](${deployUrl}) -->`;

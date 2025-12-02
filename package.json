@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/iamdoniyor/netlify-plugin-pr-deploy-info#readme",
   "dependencies": {
-    "@octokit/rest": "^20.0.2"
+    "@octokit/rest": "^20.0.2",
+    "qrcode": "^1.5.4"
   }
 }
