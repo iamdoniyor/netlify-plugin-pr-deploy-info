@@ -1,0 +1,6 @@
+name: netlify-plugin-pr-deploy-info
+inputs:
+  - name: envVarName
+    description: Name of the environment variable containing the backend API URL
+    default: VITE_GATEWAY_API_URL
+    required: false

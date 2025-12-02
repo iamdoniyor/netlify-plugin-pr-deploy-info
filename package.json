@@ -1,0 +1,28 @@
+{
+  "name": "netlify-plugin-pr-deploy-info",
+  "version": "1.0.0",
+  "description": "Netlify Build Plugin that automatically posts deploy preview information to GitHub PR comments",
+  "main": "index.js",
+  "keywords": [
+    "netlify",
+    "netlify-plugin",
+    "github",
+    "pull-request",
+    "deploy-preview",
+    "pr-comment",
+    "ci-cd"
+  ],
+  "author": "Doniyor",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamdoniyor/netlify-plugin-pr-deploy-info.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iamdoniyor/netlify-plugin-pr-deploy-info/issues"
+  },
+  "homepage": "https://github.com/iamdoniyor/netlify-plugin-pr-deploy-info#readme",
+  "dependencies": {
+    "@octokit/rest": "^20.0.2"
+  }
+}
