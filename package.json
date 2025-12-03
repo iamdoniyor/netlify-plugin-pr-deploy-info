@@ -1,6 +1,6 @@
 {
   "name": "netlify-plugin-pr-deploy-info",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Netlify Build Plugin that automatically posts deploy preview information to GitHub PR comments",
   "main": "index.js",
   "keywords": [

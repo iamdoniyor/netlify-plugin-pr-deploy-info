@@ -89,11 +89,11 @@ module.exports = {
     // Create comment body with unique identifier
     const commentIdentifier = "<!-- netlify-pr-deploy-info -->";
     const commentBody = `${commentIdentifier}
-### <span aria-hidden="true">✅</span> Deploy Preview for *${siteName}* ready!!!
+### <span aria-hidden="true">✅</span> Deploy Preview for *${siteName}* ready!
 
 
 |  Name | Link |
-|:-:|------------------------|
+|:------------------|------------------------|
 |<span aria-hidden="true">🔨</span> Latest commit | ${commitRef || 'N/A'} |
 |<span aria-hidden="true">🔍</span> Latest deploy log | ${deployLogUrl || 'N/A'} |
 |<span aria-hidden="true">😎</span> Deploy Preview | [${deployUrl}](${deployUrl}) |
