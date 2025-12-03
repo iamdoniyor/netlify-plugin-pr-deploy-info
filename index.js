@@ -1,4 +1,5 @@
 const { Octokit } = require("@octokit/rest");
+const { createAppAuth } = require("@octokit/auth-app");
 
 module.exports = {
   onSuccess: async ({ inputs }) => {
@@ -12,13 +13,21 @@ module.exports = {
     }
 
     // Verify required environment variables
-    const githubToken = process.env.GITHUB_TOKEN;
     const repositoryUrl = process.env.REPOSITORY_URL;
     const deployUrl = process.env.DEPLOY_PRIME_URL;
     const commitRef = process.env.COMMIT_REF;
 
-    if (!githubToken) {
-      console.error("ERROR: GITHUB_TOKEN environment variable is not set");
+    // Check for GitHub App credentials or personal token
+    const githubAppId = process.env.GITHUB_APP_ID;
+    const githubAppPrivateKey = process.env.GITHUB_APP_PRIVATE_KEY;
+    const githubAppInstallationId = process.env.GITHUB_APP_INSTALLATION_ID;
+    const githubToken = process.env.GITHUB_TOKEN;
+
+    const hasGitHubApp = githubAppId && githubAppPrivateKey && githubAppInstallationId;
+    const hasPersonalToken = githubToken;
+
+    if (!hasGitHubApp && !hasPersonalToken) {
+      console.error("ERROR: Either GitHub App credentials (GITHUB_APP_ID, GITHUB_APP_PRIVATE_KEY, GITHUB_APP_INSTALLATION_ID) or GITHUB_TOKEN must be set");
       return;
     }
 
@@ -88,9 +97,25 @@ module.exports = {
 
     // Post or update comment on GitHub PR
     try {
-      const octokit = new Octokit({
-        auth: githubToken,
-      });
+      // Initialize Octokit with GitHub App or personal token
+      let octokit;
+
+      if (hasGitHubApp) {
+        console.log("✓ Using GitHub App authentication");
+        octokit = new Octokit({
+          authStrategy: createAppAuth,
+          auth: {
+            appId: githubAppId,
+            privateKey: githubAppPrivateKey,
+            installationId: githubAppInstallationId,
+          },
+        });
+      } else {
+        console.log("✓ Using personal access token authentication");
+        octokit = new Octokit({
+          auth: githubToken,
+        });
+      }
 
       // Find existing comment from this plugin
       const { data: comments } = await octokit.issues.listComments({
