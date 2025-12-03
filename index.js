@@ -59,9 +59,8 @@ module.exports = {
 
     // Get deploy log URL
     const deployId = process.env.DEPLOY_ID || '';
-    const siteId = process.env.SITE_ID || '';
-    const deployLogUrl = deployId && siteId
-      ? `https://app.netlify.com/sites/${siteId}/deploys/${deployId}`
+    const deployLogUrl = deployId && siteName
+      ? `https://app.netlify.com/projects/${siteName}/deploys/${deployId}`
       : '';
 
     // Generate QR code URL using a public QR code API
