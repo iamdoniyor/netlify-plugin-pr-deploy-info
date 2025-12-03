@@ -81,10 +81,18 @@ module.exports = {
       // Continue without QR code if generation fails
     }
 
-    // Build QR code cell content
-    const qrCodeCell = qrCodeDataUrl
-      ? '<details><summary> Toggle QR Code... </summary><br /><br /><img src="' + qrCodeDataUrl + '" alt="QR Code" width="200" /><br /><br />_Use your smartphone camera to open QR code link._</details>'
-      : '<details><summary> Toggle QR Code... </summary><br /><br />QR code not available<br /><br /></details>';
+    // Build QR code section
+    const qrCodeSection = qrCodeDataUrl
+      ? `
+<details>
+<summary>📱 <b>Preview on Mobile</b> - Toggle QR Code</summary>
+<br />
+<img src="${qrCodeDataUrl}" alt="QR Code" width="200" />
+<br />
+<i>Scan with your smartphone camera to open the preview</i>
+</details>
+`
+      : '';
 
     // Create comment body with unique identifier
     const commentIdentifier = "<!-- netlify-pr-deploy-info -->";
@@ -97,8 +105,9 @@ module.exports = {
 |<span aria-hidden="true">🔨</span> Latest commit | ${commitRef || 'N/A'} |
 |<span aria-hidden="true">🔍</span> Latest deploy log | ${deployLogUrl || 'N/A'} |
 |<span aria-hidden="true">😎</span> Deploy Preview | [${deployUrl}](${deployUrl}) |
-|<span aria-hidden="true">📱</span> Preview on mobile | ${qrCodeCell} |
 |<span aria-hidden="true">🌳</span> Backend environment | \`${backendEnv}\` |
+
+${qrCodeSection}
 ---
 <!-- [${siteName} Preview](${deployUrl}) -->`;
 
