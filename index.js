@@ -83,7 +83,7 @@ module.exports = {
 
     // Build QR code cell content
     const qrCodeCell = qrCodeDataUrl
-      ? '<details><summary> Toggle QR Code... </summary><br /><br />![QR Code](' + qrCodeDataUrl + ')<br /><br />_Use your smartphone camera to open QR code link._</details>'
+      ? '<details><summary> Toggle QR Code... </summary><br /><br /><img src="' + qrCodeDataUrl + '" alt="QR Code" width="200" /><br /><br />_Use your smartphone camera to open QR code link._</details>'
       : '<details><summary> Toggle QR Code... </summary><br /><br />QR code not available<br /><br /></details>';
 
     // Create comment body with unique identifier
