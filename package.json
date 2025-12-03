@@ -1,6 +1,6 @@
 {
   "name": "netlify-plugin-pr-deploy-info",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Netlify Build Plugin that automatically posts deploy preview information to GitHub PR comments",
   "main": "index.js",
   "keywords": [
@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/iamdoniyor/netlify-plugin-pr-deploy-info#readme",
   "dependencies": {
-    "@octokit/rest": "^20.0.2",
-    "qrcode": "^1.5.4"
+    "@octokit/rest": "^20.0.2"
   }
 }

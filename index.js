@@ -1,5 +1,4 @@
 const { Octokit } = require("@octokit/rest");
-const QRCode = require("qrcode");
 
 module.exports = {
   onSuccess: async ({ inputs }) => {
@@ -55,9 +54,6 @@ module.exports = {
     const envVarName = inputs.envVarName || "VITE_GATEWAY_API_URL";
     const backendEnv = process.env[envVarName] || "unknown";
 
-    // Get short commit SHA
-    const shortCommit = commitRef ? commitRef.substring(0, 7) : "unknown";
-
     // Get site name from Netlify environment variable
     const siteName = process.env.SITE_NAME || 'site';
 
@@ -68,31 +64,12 @@ module.exports = {
       ? `https://app.netlify.com/sites/${siteId}/deploys/${deployId}`
       : '';
 
-    // Generate QR code for deploy URL
-    let qrCodeDataUrl = '';
-    try {
-      qrCodeDataUrl = await QRCode.toDataURL(deployUrl, {
-        width: 200,
-        margin: 1,
-        errorCorrectionLevel: 'M'
-      });
-    } catch (error) {
-      console.error('ERROR: Failed to generate QR code:', error.message);
-      // Continue without QR code if generation fails
-    }
+    // Generate QR code URL using a public QR code API
+    // Using api.qrserver.com which is a free, reliable service
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(deployUrl)}`;
 
-    // Build QR code section
-    const qrCodeSection = qrCodeDataUrl
-      ? `
-<details>
-<summary>📱 <b>Preview on Mobile</b> - Toggle QR Code</summary>
-<br />
-<img src="${qrCodeDataUrl}" alt="QR Code" width="200" />
-<br />
-<i>Scan with your smartphone camera to open the preview</i>
-</details>
-`
-      : '';
+    // Build QR code cell content (inside table like Netlify does)
+    const qrCodeCell = `<details><summary>📱 Toggle QR Code...</summary><br /><br />![QR Code](${qrCodeUrl})<br /><br />_Use your smartphone camera to open QR code link._</details>`;
 
     // Create comment body with unique identifier
     const commentIdentifier = "<!-- netlify-pr-deploy-info -->";
@@ -105,9 +82,8 @@ module.exports = {
 |<span aria-hidden="true">🔨</span> Latest commit | ${commitRef || 'N/A'} |
 |<span aria-hidden="true">🔍</span> Latest deploy log | ${deployLogUrl || 'N/A'} |
 |<span aria-hidden="true">😎</span> Deploy Preview | [${deployUrl}](${deployUrl}) |
+|<span aria-hidden="true">📱</span> Preview on mobile | ${qrCodeCell} |
 |<span aria-hidden="true">🌳</span> Backend environment | \`${backendEnv}\` |
-
-${qrCodeSection}
 ---
 <!-- [${siteName} Preview](${deployUrl}) -->`;
 
